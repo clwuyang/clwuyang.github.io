@@ -25,6 +25,15 @@ jobs:
       - name: Verify pnpm version
         run: pnpm --version
 
+      - name: Check for pnpm lock file
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            echo "pnpm-lock.yaml file exists."
+          else
+            echo "pnpm-lock.yaml file does not exist."
+            exit 1
+          fi
+
       - name: Install dependencies
         run: pnpm install
 
@@ -38,6 +47,9 @@ jobs:
         run: |
           echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV
           echo "VERSION=6.14.5" >> $GITHUB_ENV
+
+      - name: Debug environment variables
+        run: printenv | grep PACKAGE_MANAGER
 
       - name: Upload the site
         uses: withastro/action@v2

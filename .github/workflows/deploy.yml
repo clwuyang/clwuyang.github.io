@@ -51,6 +51,13 @@ jobs:
       - name: Debug environment variables
         run: printenv | grep PACKAGE_MANAGER
 
+      - name: Debug Astro action inputs
+        run: |
+          echo "Astro action inputs:"
+          echo "Path: ."
+          echo "Node version: 20"
+          echo "Package manager: pnpm"
+
       - name: Upload the site
         uses: withastro/action@v2
         with:

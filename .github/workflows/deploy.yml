@@ -22,7 +22,13 @@ jobs:
         with:
           version: 6.14.5  # specify the pnpm version here
 
-      - name: Install, build, and upload your site
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build the site
+        run: pnpm build
+      
+      - name: Upload the site
         uses: withastro/action@v2
         with:
           path: . # The root location of your Astro project inside the repository. (optional)

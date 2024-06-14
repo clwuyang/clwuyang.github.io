@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
-      
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
@@ -27,13 +27,12 @@ jobs:
 
       - name: Build the site
         run: pnpm build
-      
+
       - name: Upload the site
-        uses: withastro/action@v2
-        with:
-          path: . # The root location of your Astro project inside the repository. (optional)
-          node-version: 20 # The specific version of Node that should be used to build your site. Defaults to 20. (optional)
-          package-manager: pnpm # Specify pnpm as the package manager
+        run: |
+          npm install -g @withastro/action@v2
+          astro build
+          astro deploy --site .
 
   deploy:
     needs: build

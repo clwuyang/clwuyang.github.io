@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
-      
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
@@ -34,12 +34,14 @@ jobs:
       - name: Verify build output
         run: ls -la
 
-      - name: Upload the site
+      - name: Set environment variables for Astro action
         run: |
           echo "Using package manager: pnpm"
           echo "Setting up environment variables"
           echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV
           echo "VERSION=6.14.5" >> $GITHUB_ENV
+
+      - name: Upload the site
         uses: withastro/action@v2
         with:
           path: . # The root location of your Astro project inside the repository. (optional)

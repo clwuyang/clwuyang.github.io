@@ -36,16 +36,14 @@ jobs:
 
       - name: Set environment variables for Astro action
         run: |
-          echo "Using package manager: pnpm"
-          echo "Setting up environment variables"
           echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV
           echo "VERSION=6.14.5" >> $GITHUB_ENV
 
       - name: Upload the site
         uses: withastro/action@v2
         with:
-          path: . # The root location of your Astro project inside the repository. (optional)
-          node-version: 20 # The specific version of Node that should be used to build your site. Defaults to 20. (optional)
+          path: . # The root location of your Astro project inside the repository
+          node-version: 20 # The specific version of Node that should be used to build your site
           package-manager: pnpm # Specify pnpm as the package manager
 
   deploy:

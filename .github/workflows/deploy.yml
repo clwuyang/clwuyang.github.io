@@ -41,7 +41,7 @@ jobs:
         run: pnpm build
 
       - name: Verify build output
-        run: ls -la
+        run: ls -la dist
 
       - name: Deploy to GitHub Pages
         env:
@@ -49,6 +49,4 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
-          pnpm run deploy
-
+          pnpm deploy

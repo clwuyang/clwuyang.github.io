@@ -43,6 +43,11 @@ jobs:
       - name: Verify build output
         run: ls -la dist
 
+      - name: Debug dist directory
+        run: |
+          echo "Contents of dist directory:"
+          ls -la dist
+
       - name: Deploy to GitHub Pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use the automatically provided GITHUB_TOKEN
@@ -54,8 +59,11 @@ jobs:
           git stash --all
           git switch --orphan gh-pages
           git rm -rf .
-          mkdir -p dist
+          echo "Current directory contents after switch to gh-pages:"
+          ls -la
           cp -r dist/* .
+          echo "Directory contents after copying dist:"
+          ls -la
           git add --all
           git commit -m "Deploy to GitHub Pages"
           git push origin HEAD:gh-pages --force

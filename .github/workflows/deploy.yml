@@ -54,6 +54,7 @@ jobs:
           git stash --all
           git switch --orphan gh-pages
           git rm -rf .
+          mkdir -p dist
           cp -r dist/* .
           git add --all
           git commit -m "Deploy to GitHub Pages"

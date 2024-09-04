@@ -19,7 +19,7 @@ const { description, title } = Astro.props
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
@@ -36,6 +36,7 @@ const { description, title } = Astro.props
     <Header />
     <slot />
     <Footer />
+    
     <style is:global>
       :root {
         color-scheme: light dark;
@@ -109,6 +110,60 @@ const { description, title } = Astro.props
             background-color: rgba(0, 0, 0, 0.3);
             border-radius: 9999px;
           }
+        }
+      }
+
+      /* Media Queries for Mobile Devices */
+      @media (max-width: 640px) {
+        h1, h2, h3, h4, h5, h6 {
+          font-size: 1.25rem; /* Reduce heading font sizes */
+        }
+
+        .text-2xl {
+          font-size: 1.5rem;
+        }
+
+        .text-xl {
+          font-size: 1.25rem;
+        }
+
+        /* Reduce padding and margin for mobile */
+        .mx-auto {
+          margin-left: 1rem;
+          margin-right: 1rem;
+        }
+
+        .px-4 {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+
+        .py-4 {
+          padding-top: 1rem;
+          padding-bottom: 1rem;
+        }
+
+        /* Resize buttons and align them properly for mobile */
+        .button {
+          font-size: 0.875rem;
+          padding: 0.75rem 1rem;
+        }
+
+        /* Adjust spacing for smaller screens */
+        .mt-4 {
+          margin-top: 1rem;
+        }
+
+        .flex {
+          flex-direction: column;
+        }
+
+        .w-full {
+          width: 100%;
+        }
+
+        .h-56 {
+          height: 12rem;
         }
       }
     </style>

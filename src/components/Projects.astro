@@ -4,32 +4,130 @@ import NextJS from "./icons/NextJS.astro"
 import Tailwind from "./icons/Tailwind.astro"
 import Link from "./icons/Link.astro"
 import LinkButton from "./LinkButton.astro"
+import MetaMask from "./icons/MetaMask.astro"
+import AWS from "./icons/AWS.astro"
+import MongoDB from "./icons/MongoDB.astro"
+import TensorFlow from "./icons/TensorFlow.astro"
+import OpenAI from "./icons/OpenAI.astro";
+import Replicate from "./icons/Replicate.astro";
+import HuggingFace from "./icons/HuggingFace.astro";
+import Expressjs from "./icons/Expressjs.astro";
+
 
 const TAGS = {
   NEXT: {
     name: "Next.js",
     class: "bg-black text-white",
-    icon: NextJS,
+    icon: NextJS, // Assuming NextJS is correctly imported or defined
   },
   TAILWIND: {
     name: "Tailwind CSS",
-    class: "bg-[#003159] text-white",
-    icon: Tailwind,
+    class: "bg-[#003159] text-white", // Updated to match Tailwind's brand color
+    icon: Tailwind, // Assuming Tailwind is correctly imported or defined
+  },
+  METAMASK: {
+    name: "MetaMask",
+    class: "bg-[#F6851B] text-white", // Updated to match MetaMask's brand color
+    icon: MetaMask, // Assuming MetaMask is correctly imported or defined
+  },
+  AWS: {
+    name: "AWS",
+    class: "bg-[#FF9900] text-white", // Updated to match AWS's brand color
+    icon: AWS, // Assuming AWS is correctly imported or defined
+  },
+  TENSORFLOW: {
+    name: "TensorFlow",
+    class: "bg-[#FF6F00] text-white", // Updated to match TensorFlow's brand color
+    icon: TensorFlow, // Assuming TensorFlow is correctly imported or defined
+  },
+  MONGODB: {
+    name: "MongoDB",
+    class: "bg-[#47A248] text-white", // Updated to match MongoDB's brand color
+    icon: MongoDB, // Assuming MongoDB is correctly imported or defined
+  },
+  OpenAI: {
+    name: "OpenAI",
+    class: "bg-[#412991] text-white", // Updated to match OpenAI's brand color
+    icon: OpenAI, // Assuming OpenAI is correctly imported or defined
+  },
+  Replicate: {
+    name: "Replicate",
+    class: "bg-[#1B1F23] text-white", // Using a neutral dark color for Replicate
+    icon: Replicate, // Assuming Replicate is correctly imported or defined
+  },
+  HuggingFace: {
+    name: "HuggingFace",
+    class: "bg-[#FFCC00] text-black", // Updated to match Hugging Face's brand color
+    icon: HuggingFace, // Assuming Hugging Face is correctly imported or defined
+  },
+  Expressjs: {
+    name: "Express.js",
+    class: "bg-[#000000] text-white", // Updated to match Express.js's brand color (black)
+    icon: Expressjs, // Assuming Express.js is correctly imported or defined
   },
 }
 const PROJECTS = [
   {
-    title: "URLs shortener",
+    title: "Orahacks Hackathon — KAICare AI Psychotherapist powered by LLMs",
     description:
-      "URL shorter . Created with Node.js, Express and MongoDB.",
+      "Developed an award-winning AI solution at a 72-hour hackathon, integrating a RAG system with Brx.AI. Provided a seamless website for use and provided an deep learning model that help you keep track of good postures during exercise.",
+    link: "",
+    github: "https://github.com/KaiCare/web",
+    image: "/projects/svgl.webp",
+    tags: [TAGS.NEXT, TAGS.TAILWIND, TAGS.METAMASK, TAGS.MONGODB, TAGS.TENSORFLOW, TAGS.OpenAI
+    ],
+  },
+  {
+    title: "Full Stack AI-Powered SaaS Platform Development ",
+    description:
+      "SaaS platform that helps you in different task such as Coversational AI, Music Generation, Image Generation, Video Generation and Code Generation. Providing service depending on user tiers with payment platform.",
+    link: "",
+    github: "",
+    image: "/projects/aisaas.webp", 
+    tags: [TAGS.NEXT, TAGS.TAILWIND, TAGS.OpenAI, TAGS.Replicate, TAGS.MONGODB],
+  },
+  {
+    title: "Sign Language Detection using action recognition",
+    description:
+      "Sign Language translation in real time with custom language if needed. This helps people with ear impairment to communicate with people.",
     link: "",
     github: "",
     image: "/projects/svgl.webp",
-    tags: [TAGS.NEXT, TAGS.TAILWIND],
+    tags: [TAGS.TENSORFLOW],
   },
+  {
+    title: "Driving License Plate Detection and Character Recognition",
+    description:
+      "Machine Learning Model that tracks driving license plate rectangle and then feeds our second model for OCR that predicts the characters and digits.",
+    link: "",
+    github: "",
+    image: "/projects/drivinglicense.webp",
+    tags: [TAGS.TENSORFLOW],
+  },
+  {
+    title: "Lunar Lander Deep Reinforcement Learning Agent",
+    description:
+      "Use Gymnasium enviroment while using Stable-Baselines3 agent for training to learn how to land a spaceship seamlessly.",
+    link: "",
+    github: "",
+    image: "/projects/lunarlanding.gif",
+    tags: [TAGS.HuggingFace],
+  },
+  {
+    title: "URLs shortener",
+    description:
+      "URL shorter . Created with Node.js, Express and MongoDB. WORK IN PROGRESS",
+    link: "",
+    github: "",
+    image: "/projects/workinprogress.gif", 
+    tags: [TAGS.Expressjs, TAGS.TAILWIND],
+  },
+  
+
   
 ]
 ---
+
 
 <div class="flex flex-col gap-y-16">
   {
@@ -37,7 +135,7 @@ const PROJECTS = [
     <article class="flex flex-col space-x-0 space-y-8 group md:flex-row md:space-x-8 md:space-y-0">
   <div class="w-full md:w-1/2">
     <div class="relative flex flex-col items-center col-span-6 row-span-5 gap-8 transition duration-500 ease-in-out transform shadow-xl overflow-clip rounded-xl sm:rounded-xl md:group-hover:-translate-y-1 md:group-hover:shadow-2xl lg:border lg:border-gray-800 lg:hover:border-gray-700 lg:hover:bg-gray-800/50">
-      <img alt="R" class="object-cover object-top w-full h-56 transition duration-500 sm:h-full md:scale-110 md:group-hover:scale-105" loading="lazy" src={image} />
+      <img alt="project showcase" class="object-cover object-top w-full h-56 transition duration-500 sm:h-full md:scale-110 md:group-hover:scale-105" loading="lazy" src={image} />
     </div>
   </div>
 
@@ -81,6 +179,3 @@ const PROJECTS = [
     ))
   }
 </div>
-
-
-

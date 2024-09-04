@@ -5,14 +5,16 @@ import AboutMe from "@/components/AboutMe.astro"
 import Briefcase from "@/components/icons/Briefcase.astro"
 import CodeIcon from "@/components/icons/Code.astro"
 import Experience from "@/components/Experience.astro"
+import Education from "@/components/Education.astro"
 import ProfileCheck from "@/components/icons/ProfileCheck.astro"
 import Projects from "@/components/Projects.astro"
 import SectionContainer from "@/components/SectionContainer.astro"
 import Hero from "@/components/Hero.astro"
+import EducationIcon from "@/components/icons/EducationIcon.astro"
 ---
 
 <Layout
-  title="Porfolio de clwuyang - Developer & Programmer currently studying on Illinois Institute of Technology"
+  title="Porfolio de clwuyang - Developer & Programmer New Grad from Illinois Institute of Technology"
   description="Hire clwuyang to create something big. Let's create something that will change the world."
 >
   <main class="px-4">
@@ -22,6 +24,16 @@ import Hero from "@/components/Hero.astro"
     </Hero>
     </SectionContainer>
     <div class="space-y-24">
+      <SectionContainer id="education">
+        <h2
+          class="flex items-center mb-6 text-3xl font-semibold gap-x-3 text-black/80 dark:text-white"
+        >
+          <EducationIcon class="size-8" />
+          Education
+        </h2>
+        <Education />
+      </SectionContainer>
+  
     <SectionContainer id="experience">
       <h2
         class="flex items-center mb-6 text-3xl font-semibold gap-x-3 text-black/80 dark:text-white"
@@ -32,6 +44,7 @@ import Hero from "@/components/Hero.astro"
       <Experience />
     </SectionContainer>
 
+    
     <SectionContainer id="projects">
       <h2
         class="flex items-center mb-6 text-3xl font-semibold gap-x-3 text-black/80 dark:text-white"
@@ -51,6 +64,7 @@ import Hero from "@/components/Hero.astro"
       </h2>
       <AboutMe />
     </SectionContainer>
+   
   </div>
   </main>
 </Layout>

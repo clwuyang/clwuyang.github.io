@@ -1,0 +1,34 @@
+---
+import EducationItem from "./EducationItem.astro"
+const EDUCATION = [
+  {
+    date: "AUG. 2022 – AUG. 2024",
+    title: "Graduate Student",
+    company: "Illinois Institute of Technology",
+    location: "Chicago, IL 🇺🇸",
+    description: 
+      "Master of Computer Science with Specialization in Artificial Intelligence and Data Analytics. Relevant Coursework: Machine Learning, Deep Learning, Natural Language Processing, Online Social Network Analysis, Data Structures and Algorithms, Software Engineering, Cloud Computing, and Big Data. ",
+    link: "https://catalog.iit.edu/graduate/colleges/computing/computer-science/master-computer-science/#specializationstext",
+  },
+  {
+    date: "AUG. 2018 – JULY 2022",
+    title: "Bachelors in Computer Engineering",
+    company: "University of Deusto",
+    location: "Bilbao, Spain 🇪🇸",
+    description:
+      "I mastered key mathematical tools and laid the foundations of technological engineering by internalizing the fundamentals of programming, electronics, and telematics. I gained expertise in software engineering, databases, operating systems, and multimedia systems, along with hands-on experience in computer networking, artificial intelligence, and information security, further enhancing my technical skill set.",
+    link: "https://www.deusto.es/en/home/study/courses/bachelors-degree/computer-engineering1",
+  },
+  
+]
+---
+
+<ol class="relative mt-16">
+  {
+    EDUCATION.map((education) => (
+      <li class="">
+        <EducationItem {...education} />
+      </li>
+    ))
+  }
+</ol>

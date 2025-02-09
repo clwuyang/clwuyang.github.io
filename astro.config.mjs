@@ -7,7 +7,12 @@ export default defineConfig({
   integrations: [
     tailwind(),
     robotsTxt(),
-    react()  // Adding React integration
+    react()
   ],
-  site: 'https://clwuyang.github.io',
+  vite: {
+    ssr: {
+      noExternal: ['@xterm/xterm']
+    }
+  },
+  output: 'static'
 });

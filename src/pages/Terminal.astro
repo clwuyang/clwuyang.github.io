@@ -1,0 +1,547 @@
+---
+import Header from '../components/Header.astro';
+import '@xterm/xterm/css/xterm.css';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Terminal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body class="dark:bg-gray-900 bg-white min-h-screen">
+    <Header />
+    <main class="container mx-auto px-4">
+      <div class="pt-20">
+        <div id="terminal" class="w-full h-[80vh] rounded-lg overflow-hidden border border-gray-700"></div>
+      </div>
+    </main>
+
+    <script>
+      import { Terminal } from '@xterm/xterm';
+      import { FitAddon } from '@xterm/addon-fit';
+      
+      // Define TypeScript interface inside script
+      interface TerminalType {
+        writeln: (text: string) => void;
+        write: (text: string) => void;
+        clear: () => void;
+        onData: (callback: (data: string) => void) => void;
+        open: (element: HTMLElement) => void;
+        dispose: () => void;
+        loadAddon: (addon: any) => void;
+      }
+      
+      // Add these type definitions at the top of the script section
+      interface FileSystemItem {
+        type: 'file' | 'dir';
+        contents?: string[];
+      }
+
+      interface FileSystem {
+        [key: string]: FileSystemItem;
+      }
+      
+      // Define themes
+      const themes = {
+        tokyo: {
+          background: '#1a1b26',
+          foreground: '#a9b1d6',
+          cursor: '#f7768e',
+          black: '#32344a',
+          blue: '#7aa2f7',
+          cyan: '#7dcfff',
+          green: '#9ece6a',
+          magenta: '#ad8ee6',
+          red: '#f7768e',
+          white: '#787c99',
+          yellow: '#e0af68'
+        },
+        dracula: {
+          background: '#282a36',
+          foreground: '#f8f8f2',
+          cursor: '#f8f8f2',
+          black: '#21222c',
+          blue: '#bd93f9',
+          cyan: '#8be9fd',
+          green: '#50fa7b',
+          magenta: '#ff79c6',
+          red: '#ff5555',
+          white: '#f8f8f2',
+          yellow: '#f1fa8c'
+        },
+        monokai: {
+          background: '#272822',
+          foreground: '#f8f8f2',
+          cursor: '#f8f8f2',
+          black: '#272822',
+          blue: '#66d9ef',
+          cyan: '#a1efe4',
+          green: '#a6e22e',
+          magenta: '#f92672',
+          red: '#f92672',
+          white: '#f8f8f2',
+          yellow: '#f4bf75'
+        },
+        nord: {
+          background: '#2e3440',
+          foreground: '#d8dee9',
+          cursor: '#d8dee9',
+          black: '#3b4252',
+          blue: '#81a1c1',
+          cyan: '#88c0d0',
+          green: '#a3be8c',
+          magenta: '#b48ead',
+          red: '#bf616a',
+          white: '#e5e9f0',
+          yellow: '#ebcb8b'
+        }
+      };
+      
+      // Update the fileSystem definition with the new type
+      const fileSystem: FileSystem = {
+        '/': {
+          type: 'dir',
+          contents: ['about.txt', 'projects', 'skills.txt', 'contact.txt']
+        },
+        '/about.txt': {
+          type: 'file'
+        },
+        '/projects': {
+          type: 'dir',
+          contents: ['web.txt', 'ai.txt']
+        },
+        '/projects/web.txt': {
+          type: 'file'
+        },
+        '/projects/ai.txt': {
+          type: 'file'
+        },
+        '/skills.txt': {
+          type: 'file'
+        },
+        '/contact.txt': {
+          type: 'file'
+        }
+      };
+
+      let currentDirectory = '/';
+      
+      document.addEventListener('DOMContentLoaded', () => {
+        const term = new Terminal({
+          cursorBlink: true,
+          fontSize: 14,
+          fontFamily: 'Menlo, Monaco, "Courier New", monospace',
+          theme: themes.tokyo  // Set default theme
+        });
+
+        const fitAddon = new FitAddon();
+        term.loadAddon(fitAddon);
+        
+        const terminalElement = document.getElementById('terminal');
+        if (terminalElement) {
+          term.open(terminalElement);
+          setTimeout(() => fitAddon.fit(), 100);
+          
+          // Enhanced Welcome Banner
+          term.writeln('\x1b[1;35m');
+          term.writeln('╔════════════════════════════════════════════════════════════╗');
+          term.writeln('║                Welcome to My Terminal                      ║');
+          term.writeln('║              Interactive Portfolio Interface               ║');
+          term.writeln('║                                                            ║');
+          term.writeln('║  Type "help" to see available commands                     ║');
+          term.writeln('║  Current user: guest                                       ║');
+          term.writeln('╚════════════════════════════════════════════════════════════╝');
+          term.writeln('\x1b[0m');
+          
+          // Current Date and Time
+          const now = new Date();
+          const chicagoNow = new Date(now.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
+          
+          const timeFormat: Intl.DateTimeFormatOptions = {
+            timeZone: 'America/Chicago',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          };
+          
+          term.writeln('\x1b[1;36mCurrent Time:\x1b[0m');
+          term.writeln(`\x1b[33m-------------Your Time---------------: ${now.toLocaleString('en-US', timeFormat)}\x1b[0m`);
+          term.writeln(`\x1b[33m----Cheng's Timezone CST(Chicago)----: ${chicagoNow.toLocaleString('en-US', timeFormat)}\x1b[0m`);
+          
+          term.writeln('');
+          
+          term.writeln('\x1b[36mDon\'t worry if you\'re new to terminals - it\'s easy to use!\x1b[0m');
+          term.writeln('\x1b[36mJust type a command and press Enter. For example:\x1b[0m');
+          term.writeln('\x1b[33m1. Type "help" to see all available commands\x1b[0m');
+          term.writeln('\x1b[33m2. Type "about" to learn about me\x1b[0m');
+          term.writeln('\x1b[33m3. Type "social" to see my social links\x1b[0m');
+          term.writeln('\x1b[36m\nReady to start? Type a command below:\x1b[0m');
+          term.write(`\x1b[32mguest@cheng\'s-portfolio:${currentDirectory}$ \x1b[0m`);
+
+          let currentLine = '';
+          const commandHistory: string[] = [];
+          let historyIndex = 0;
+
+          term.onData((e: string) => {
+            switch (e) {
+              case '\r': // Enter
+                term.write('\r\n');
+                if (currentLine.trim()) {
+                  commandHistory.push(currentLine);
+                  historyIndex = commandHistory.length;
+                }
+                handleCommand(currentLine.trim(), term);
+                currentLine = '';
+                term.write(`\x1b[32mguest@cheng\'s-portfolio:${currentDirectory}$ \x1b[0m`);
+                break;
+              case '\u007F': // Backspace
+                if (currentLine.length > 0) {
+                  currentLine = currentLine.slice(0, -1);
+                  term.write('\b \b');
+                }
+                break;
+              case '\u001b[A': // Up arrow
+                if (historyIndex > 0) {
+                  historyIndex--;
+                  currentLine = commandHistory[historyIndex];
+                  term.write(`\r\x1b[32mguest@cheng\'s-portfolio:${currentDirectory}$ \x1b[0m` + currentLine);
+                }
+                break;
+              case '\u001b[B': // Down arrow
+                if (historyIndex < commandHistory.length) {
+                  historyIndex++;
+                  currentLine = commandHistory[historyIndex] || '';
+                  term.write(`\r\x1b[32mguest@cheng\'s-portfolio:${currentDirectory}$ \x1b[0m` + currentLine);
+                }
+                break;
+              default:
+                currentLine += e;
+                term.write(e);
+            }
+          });
+
+          function handleCommand(command: string, term: TerminalType): void {
+            switch (command.toLowerCase()) {
+              case 'help':
+                term.writeln('\x1b[1;35m╔════════════════ Available Commands ════════════════╗\x1b[0m');
+                term.writeln('\x1b[36m• help     \x1b[0m : Show this help message');
+                term.writeln('\x1b[36m• about    \x1b[0m : Learn about me');
+                term.writeln('\x1b[36m• clear    \x1b[0m : Clear the screen');
+                term.writeln('\x1b[36m• projects \x1b[0m : View my projects');
+                term.writeln('\x1b[36m• contact  \x1b[0m : Get my contact information');
+                term.writeln('\x1b[36m• skills   \x1b[0m : List my technical skills');
+                term.writeln('\x1b[36m• whoami   \x1b[0m : Display user information');
+                term.writeln('\x1b[36m• social   \x1b[0m : Display social media links');
+                term.writeln('\x1b[36m• github   \x1b[0m : Open my GitHub profile');
+                term.writeln('\x1b[36m• linkedin \x1b[0m : Open my LinkedIn profile');
+                term.writeln('\x1b[36m• date     \x1b[0m : Show current date and time');
+                term.writeln('\x1b[36m• banner   \x1b[0m : Show welcome banner');
+                term.writeln('\x1b[36m• theme    \x1b[0m : Change terminal theme');
+                term.writeln('\x1b[36m• echo     \x1b[0m : Display a line of text');
+                term.writeln('\x1b[36m• ls       \x1b[0m : List directory contents');
+                term.writeln('\x1b[36m• cat      \x1b[0m : Display file contents');
+                term.writeln('\x1b[36m• cd       \x1b[0m : Change directory');
+                term.writeln('\x1b[36m• pwd      \x1b[0m : Print working directory');
+                term.writeln('\x1b[1;35m╚══════════════════════════════════════════════════╝\x1b[0m');
+                break;
+
+              case 'about':
+                term.writeln('\x1b[1;35m╔════════════════════ About Me ════════════════════╗\x1b[0m');
+                term.writeln('\x1b[33mI\'m Chenglong Wu, a graduate student in Computer Science\x1b[0m');
+                term.writeln('\x1b[33mat Illinois Institute of Technology, specializing in\x1b[0m');
+                term.writeln('\x1b[33mSoftware Engineering and AI.\x1b[0m');
+                term.writeln('\x1b[1;35m╚══════════════════════════════════════════════════╝\x1b[0m');
+                break;
+
+              case 'clear':
+                term.clear();
+                // Show banner again after clearing
+                term.writeln('\x1b[1;35m');
+                term.writeln('╔════════════════════════════════════════════════════════════╗');
+                term.writeln('║                Welcome to My Terminal                      ║');
+                term.writeln('║              Interactive Portfolio Interface               ║');
+                term.writeln('║                                                            ║');
+                term.writeln('║  Type "help" to see available commands                     ║');
+                term.writeln('║  Current user: guest                                       ║');
+                term.writeln('╚════════════════════════════════════════════════════════════╝');
+                term.writeln('\x1b[0m');
+                
+                // Add current time
+                const currentTime = new Date();
+                const currentChicagoTime = new Date(currentTime.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
+                
+                term.writeln('\x1b[1;36mCurrent Time:\x1b[0m');
+                term.writeln(`\x1b[33m-------------Your Time---------------: ${currentTime.toLocaleString('en-US', timeFormat)}\x1b[0m`);
+                term.writeln(`\x1b[33m----Cheng's Timezone CST(Chicago)----: ${currentChicagoTime.toLocaleString('en-US', timeFormat)}\x1b[0m`);
+                
+                term.writeln('');
+                
+                // Add help text
+                term.writeln('\x1b[36mDon\'t worry if you\'re new to terminals - it\'s easy to use!\x1b[0m');
+                term.writeln('\x1b[36mJust type a command and press Enter. For example:\x1b[0m');
+                term.writeln('\x1b[33m1. Type "help" to see all available commands\x1b[0m');
+                term.writeln('\x1b[33m2. Type "about" to learn about me\x1b[0m');
+                term.writeln('\x1b[33m3. Type "social" to see my social links\x1b[0m');
+                break;
+
+              case 'projects':
+                term.writeln('\x1b[1;35m╔═══════════════════ My Projects ═══════════════════╗\x1b[0m');
+                term.writeln('\x1b[1;33mWeb Development Projects:\x1b[0m');
+                term.writeln('\x1b[36m1. Platform for Video Clip Streaming and Hosting\x1b[0m');
+                term.writeln('   \x1b[90m→ Technologies: Firebase, GCP, Docker\x1b[0m');
+                term.writeln('\x1b[36m2. KaiCare: Pyhsioterapist Assistant powered by LLMs\x1b[0m');
+                term.writeln('   \x1b[90m→ Technologies: OpenCV, React, Next.js, Tailwind CSS, MongoDB, Brx.AI\x1b[0m');
+                term.writeln('\x1b[36m3. Full Stack AI-Powered SaaS Platform Development\x1b[0m');
+                term.writeln('   \x1b[90m→ Technologies: React, Next.js, Tailwind CSS, Prisma\x1b[0m');
+                term.writeln('\x1b[36m4. Portfolio Website\x1b[0m');
+                term.writeln('   \x1b[90m→ Technologies: Astro.build, XTerm.js\x1b[0m');
+                term.writeln('');
+                term.writeln('\x1b[1;33mAI Projects:\x1b[0m');
+                term.writeln('\x1b[36m1. Driving License Plate Detection and Recognition\x1b[0m');
+                term.writeln('   \x1b[90m→ Technologies: OpenCV, Tensorflow\x1b[0m');
+                term.writeln('\x1b[36m2. Lunar Landing Deep Reinforcement Learning Agent\x1b[0m');
+                term.writeln('   \x1b[90m→ Technologies: Gymnasium, Stable Baselines3\x1b[0m');
+                term.writeln('\x1b[33m\nMore Info in the header of the page {Projects}\x1b[0m');
+                term.writeln('\x1b[1;35m╚══════════════════════════════════════════════════╝\x1b[0m');
+                break;
+
+              case 'contact':
+                term.writeln('\x1b[1;35m╔═════════════ Contact Information ══════════════╗\x1b[0m');
+                term.writeln('\x1b[36m📧 Email    :\x1b[0m \x1b[33mclwuyang@gmail.com\x1b[0m');
+                term.writeln('\x1b[36m💼 LinkedIn :\x1b[0m \x1b[33mlinkedin.com/in/cwuyang\x1b[0m');
+                term.writeln('\x1b[36m💻 GitHub   :\x1b[0m \x1b[33mgithub.com/clwuyang\x1b[0m');
+                term.writeln('\x1b[1;35m╚══════════════════════════════════════════════╝\x1b[0m');
+                break;
+
+              case 'skills':
+                term.writeln('\x1b[1;35m╔═════════════════ Technical Skills ════════════════╗\x1b[0m');
+                term.writeln('\x1b[1;33m💻 Programming & Scripting:\x1b[0m');
+                term.writeln('\x1b[36mPython, Java, JavaScript, R, SQL, MongoDB, LaTeX\x1b[0m');
+                term.writeln('');
+                term.writeln('\x1b[1;33m🤖 Machine Learning & Data Science:\x1b[0m');
+                term.writeln('\x1b[36mTensorFlow, PyTorch, Keras, scikit-learn, Statistical Analysis,\x1b[0m');
+                term.writeln('\x1b[36mData Mining, HuggingFace, YOLO, NumPy, Pandas, SciPy\x1b[0m');
+                term.writeln('');
+                term.writeln('\x1b[1;33m🌐 Web Development & Version Control:\x1b[0m');
+                term.writeln('\x1b[36mReact, Express.js, Next.js, TypeScript, Tailwind CSS,\x1b[0m');
+                term.writeln('\x1b[36mFlask, FastAPI, Django, Vue.js, HTML/CSS, Git, GitHub, GitLab\x1b[0m');
+                term.writeln('');
+                term.writeln('\x1b[1;33m☁️  Cloud, DevOps, & Data Engineering:\x1b[0m');
+                term.writeln('\x1b[36mAWS, FireBase, Azure, Google Cloud, Docker, Kubernetes,\x1b[0m');
+                term.writeln('\x1b[36mCI/CD, Apache Spark, Hadoop\x1b[0m');
+                term.writeln('');
+                term.writeln('\x1b[1;33m🌎 Languages:\x1b[0m');
+                term.writeln('\x1b[36mSpanish, English, Basque, Chinese\x1b[0m');
+                term.writeln('\x1b[1;35m╚══════════════════════════════════════════════════╝\x1b[0m');
+                break;
+
+              case 'whoami':
+                term.writeln('\x1b[1;35m╔════════════════ User Information ═══════════════╗\x1b[0m');
+                term.writeln('\x1b[36m👤 Name     :\x1b[0m \x1b[33mChenglong Wu\x1b[0m');
+                term.writeln('\x1b[36m💼 Role     :\x1b[0m \x1b[33mGraduate Student / Software Engineer\x1b[0m');
+                term.writeln('\x1b[36m           \x1b[0m \x1b[33mFull Stack Developer / AI Engineer\x1b[0m');
+                term.writeln('\x1b[36m📍 Location :\x1b[0m \x1b[33mChicago, Illinois USA\x1b[0m');
+                term.writeln('\x1b[36m🏠 From     :\x1b[0m \x1b[33mBilbao, Spain\x1b[0m');
+                term.writeln('\x1b[1;35m╚══════════════════════════════════════════════════╝\x1b[0m');
+                break;
+
+              case 'social':
+                term.writeln('\x1b[1;35m╔══════════════ Social Media Links ══════════════╗\x1b[0m');
+                term.writeln('\x1b[36m💻 GitHub   :\x1b[0m \x1b[33mhttps://github.com/clwuyang\x1b[0m');
+                term.writeln('\x1b[36m💼 LinkedIn :\x1b[0m \x1b[33mhttps://linkedin.com/in/cwuyang\x1b[0m');
+                term.writeln('\x1b[90mType "github" or "linkedin" to open directly\x1b[0m');
+                term.writeln('\x1b[1;35m╚══════════════════════════════════════════════════╝\x1b[0m');
+                break;
+
+              case 'github':
+                window.open('https://github.com/clwuyang', '_blank');
+                term.writeln('Opening GitHub profile...');
+                break;
+
+              case 'linkedin':
+                window.open('https://linkedin.com/in/cwuyang', '_blank');
+                term.writeln('Opening LinkedIn profile...');
+                break;
+
+              case 'date':
+                const dateNow = new Date();
+                const chicagoTime = new Date(dateNow.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
+                
+                term.writeln('\x1b[1;36mCurrent Time:\x1b[0m');
+                term.writeln(`\x1b[33m-------------Your Time---------------: ${dateNow.toLocaleString('en-US', timeFormat)}\x1b[0m`);
+                term.writeln(`\x1b[33m----Cheng's Timezone CST(Chicago)----: ${chicagoTime.toLocaleString('en-US', timeFormat)}\x1b[0m`);
+                break;
+
+              case 'banner':
+                term.writeln('\x1b[1;35m');
+                term.writeln('╔════════════════════════════════════════════════════════════╗');
+                term.writeln('║                Welcome to My Terminal                      ║');
+                term.writeln('║              Interactive Portfolio Interface               ║');
+                term.writeln('║                                                            ║');
+                term.writeln('║  Type "help" to see available commands                     ║');
+                term.writeln('║  Current user: guest                                       ║');
+                term.writeln('╚════════════════════════════════════════════════════════════╝');
+                term.writeln('\x1b[0m');
+                
+                // Add current time in banner
+                const bannerTime = new Date();
+                const bannerChicagoTime = new Date(bannerTime.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
+                
+                term.writeln('\x1b[1;36mCurrent Time:\x1b[0m');
+                term.writeln(`\x1b[33m-------------Your Time---------------: ${bannerTime.toLocaleString('en-US', timeFormat)}\x1b[0m`);
+                term.writeln(`\x1b[33m----Cheng's Timezone CST(Chicago)----: ${bannerChicagoTime.toLocaleString('en-US', timeFormat)}\x1b[0m`);
+                term.writeln('');
+                
+                // Add help text
+                term.writeln('\x1b[36mDon\'t worry if you\'re new to terminals - it\'s easy to use!\x1b[0m');
+                term.writeln('\x1b[36mJust type a command and press Enter. For example:\x1b[0m');
+                term.writeln('\x1b[33m1. Type "help" to see all available commands\x1b[0m');
+                term.writeln('\x1b[33m2. Type "about" to learn about me\x1b[0m');
+                term.writeln('\x1b[33m3. Type "social" to see my social links\x1b[0m');
+                break;
+
+              case 'theme':
+                term.writeln('\x1b[1;35m╔═════════════════ Available Themes ════════════════╗\x1b[0m');
+                term.writeln('\x1b[36m• tokyo   \x1b[0m : Default Tokyo Night theme');
+                term.writeln('\x1b[36m• dracula \x1b[0m : Dracula dark theme');
+                term.writeln('\x1b[36m• monokai \x1b[0m : Monokai theme');
+                term.writeln('\x1b[36m• nord    \x1b[0m : Nord theme');
+                term.writeln('\x1b[90mUsage: theme <name> (e.g., theme dracula)\x1b[0m');
+                term.writeln('\x1b[1;35m╚══════════════════════════════════════════════════╝\x1b[0m');
+                break;
+
+              case command.match(/^theme\s+(\w+)/)?.input:
+                const themeName = command.split(' ')[1];
+                if (themeName && themes[themeName as keyof typeof themes]) {
+                  (term as any).options.theme = themes[themeName as keyof typeof themes];
+                  term.writeln(`\x1b[32mTheme changed to ${themeName}\x1b[0m`);
+                } else {
+                  term.writeln('\x1b[31mInvalid theme. Type "theme" to see available themes\x1b[0m');
+                }
+                break;
+
+              case command.match(/^echo\s+(.+)/)?.input:
+                const message = command.substring(5);
+                term.writeln(message);
+                break;
+
+              case 'ls':
+                const contents = fileSystem[currentDirectory].contents;
+                if (contents) {
+                  contents.forEach((item: string) => {
+                    const fullPath = currentDirectory === '/' ? `/${item}` : `${currentDirectory}/${item}`;
+                    const isDir = fileSystem[fullPath]?.type === 'dir';
+                    term.writeln(`\x1b[${isDir ? '34' : '32'}m${item}${isDir ? '/' : ''}\x1b[0m`);
+                  });
+                }
+                break;
+
+              case command.match(/^cat\s+(.+)/)?.input:
+                const fileName = command.split(' ')[1];
+                const filePath = currentDirectory === '/' ? `/${fileName}` : `${currentDirectory}/${fileName}`;
+                if (fileSystem[filePath]?.type === 'file') {
+                  switch(filePath) {
+                    case '/about.txt':
+                      term.writeln('\x1b[1;33m=== About Me ===\x1b[0m');
+                      term.writeln('Hi, I\'m Chenglong Wu, a graduate student in Computer Science');
+                      term.writeln('at Illinois Institute of Technology, specializing in');
+                      term.writeln('Software Engineering and AI.');
+                      break;
+                      
+                    case '/projects/web.txt':
+                      term.writeln('\x1b[1;33m=== Web Development Projects ===\x1b[0m');
+                      term.writeln('');
+                      term.writeln('\x1b[36m1. Platform for Video Clip Streaming and Hosting\x1b[0m');
+                      term.writeln('   Technologies: Firebase, GCP, Docker');
+                      term.writeln('');
+                      term.writeln('\x1b[36m2. KaiCare: Physiotherapist Assistant\x1b[0m');
+                      term.writeln('   Technologies: OpenCV, React, Next.js, Tailwind CSS, MongoDB');
+                      term.writeln('');
+                      term.writeln('\x1b[36m3. Full Stack AI-Powered SaaS Platform\x1b[0m');
+                      term.writeln('   Technologies: React, Next.js, Tailwind CSS, Prisma');
+                      term.writeln('');
+                      term.writeln('\x1b[36m4. Portfolio Website\x1b[0m');
+                      term.writeln('   Technologies: Astro.build, XTerm.js');
+                      break;
+                      
+                    case '/projects/ai.txt':
+                      term.writeln('\x1b[1;33m=== AI Projects ===\x1b[0m');
+                      term.writeln('');
+                      term.writeln('\x1b[36m1. Driving License Plate Detection\x1b[0m');
+                      term.writeln('   Technologies: OpenCV, TensorFlow');
+                      term.writeln('');
+                      term.writeln('\x1b[36m2. Lunar Landing Deep RL Agent\x1b[0m');
+                      term.writeln('   Technologies: Gymnasium, Stable Baselines3');
+                      break;
+                      
+                    case '/skills.txt':
+                      term.writeln('\x1b[1;33m=== Technical Skills ===\x1b[0m');
+                      term.writeln('');
+                      term.writeln('\x1b[36m💻 Programming:\x1b[0m');
+                      term.writeln('   Python, Java, JavaScript, R, SQL');
+                      term.writeln('');
+                      term.writeln('\x1b[36m🤖 ML/AI:\x1b[0m');
+                      term.writeln('   TensorFlow, PyTorch, Keras, scikit-learn');
+                      term.writeln('');
+                      term.writeln('\x1b[36m🌐 Web Development:\x1b[0m');
+                      term.writeln('   React, Next.js, TypeScript, Tailwind CSS');
+                      break;
+                      
+                    case '/contact.txt':
+                      term.writeln('\x1b[1;33m=== Contact Information ===\x1b[0m');
+                      term.writeln('');
+                      term.writeln('\x1b[36m📧 Email    :\x1b[0m clwuyang@gmail.com');
+                      term.writeln('\x1b[36m💼 LinkedIn :\x1b[0m linkedin.com/in/cwuyang');
+                      term.writeln('\x1b[36m💻 GitHub   :\x1b[0m github.com/clwuyang');
+                      break;
+                  }
+                } else {
+                  term.writeln(`\x1b[31mcat: ${fileName}: No such file\x1b[0m`);
+                }
+                break;
+
+              case command.match(/^cd\s+(.+)/)?.input:
+                const path = command.split(' ')[1];
+                const newPath = path.startsWith('/') ? path : `${currentDirectory === '/' ? '' : currentDirectory}/${path}`;
+                if (fileSystem[newPath]?.type === 'dir') {
+                  currentDirectory = newPath;
+                  term.writeln(`\x1b[32mChanged directory to ${newPath}\x1b[0m`);
+                } else {
+                  term.writeln(`\x1b[31mcd: ${path}: No such directory\x1b[0m`);
+                }
+                break;
+
+              case 'pwd':
+                term.writeln(currentDirectory);
+                break;
+
+              case '':
+                break;
+
+              default:
+                term.writeln(`Command not found: ${command}`);
+                term.writeln('Type "help" for available commands');
+            }
+          }
+        }
+
+        window.addEventListener('resize', () => {
+          fitAddon.fit();
+        });
+      });
+    </script>
+
+    <style>
+      #terminal {
+        min-height: 400px;
+        background: #1a1b26 !important;
+      }
+    </style>
+  </body>
+</html>
+

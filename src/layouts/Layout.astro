@@ -34,7 +34,9 @@ const { description, title } = Astro.props
     >
     </div>
     <Header />
-    <slot />
+    <main class="px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl pt-20">
+      <slot />
+    </main>
     <Footer />
     
     <style is:global>
@@ -68,9 +70,10 @@ const { description, title } = Astro.props
       }
 
       #header-nav {
-        animation: blur linear both 0.5s;
-        animation-timeline: scroll();
-        animation-range: 0 500px;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 50;
       }
 
       @keyframes blur {
@@ -165,6 +168,21 @@ const { description, title } = Astro.props
         .h-56 {
           height: 12rem;
         }
+
+        main {
+          margin-top: var(--header-height, 60px);
+          padding-top: 1rem;
+        }
+
+        /* Adjust navigation for mobile */
+        .nav-links {
+          gap: 0.5rem;
+        }
+      }
+
+      /* Adjust main content spacing */
+      main {
+        margin-top: var(--header-height, 80px);
       }
     </style>
   </body>

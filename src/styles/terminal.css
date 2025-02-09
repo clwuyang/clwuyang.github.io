@@ -1,0 +1,17 @@
+#terminal {
+  height: 400px;
+  width: 100%;
+  background-color: #000000;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 20px 0;
+}
+
+.xterm {
+  height: 100%;
+  padding: 8px;
+}
+
+.xterm-viewport {
+  overflow-y: auto !important;
+} 

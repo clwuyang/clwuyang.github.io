@@ -1,0 +1,39 @@
+.lanyard-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.lanyard-container * {
+  pointer-events: auto;
+}
+
+.lanyard-canvas {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+/* Ensure proper stacking context */
+canvas {
+  position: relative;
+  z-index: 1;
+}
+
+/* Optimize performance */
+canvas {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Ensure proper touch handling on mobile */
+@media (hover: none) and (pointer: coarse) {
+  .lanyard-container {
+    touch-action: none;
+  }
+} 

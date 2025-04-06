@@ -1,11 +1,10 @@
 .lanyard-container {
-  position: fixed;
-  top: 0;
-  right: 0;
+  position: relative;
   width: 100%;
   height: 100%;
   pointer-events: none;
   z-index: 10;
+  overflow: visible;
 }
 
 .lanyard-container * {
@@ -13,8 +12,8 @@
 }
 
 .lanyard-canvas {
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
   background: transparent;
 }
 
@@ -29,11 +28,19 @@ canvas {
   transform: translateZ(0);
   backface-visibility: hidden;
   perspective: 1000px;
+  will-change: transform;
 }
 
 /* Ensure proper touch handling on mobile */
 @media (hover: none) and (pointer: coarse) {
   .lanyard-container {
     touch-action: none;
+  }
+}
+
+/* Fix for Safari */
+@supports (-webkit-touch-callout: none) {
+  .lanyard-container {
+    -webkit-transform: translateZ(0);
   }
 } 

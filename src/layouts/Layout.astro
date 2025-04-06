@@ -5,6 +5,7 @@ import Header from "../components/Header.astro"
 import Footer from "../components/Footer.astro"
 import { ViewTransitions } from "astro:transitions"
 import '../styles/global.css';
+import { MusicPlayer } from '../components/MusicPlayer';
 
 interface Props {
   title: string
@@ -38,6 +39,8 @@ const { description, title } = Astro.props
       <slot />
     </main>
     <Footer />
+    <div class="h-24"><!-- Spacer for music player --></div>
+    <MusicPlayer client:load />
     
     <style is:global>
       :root {

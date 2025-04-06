@@ -9,8 +9,8 @@ import { Lanyard } from "@/components/Lanyard"
 ---
 
 <div class="relative">
-  <div class="flex justify-between items-start gap-4">
-    <div class="max-w-xl">
+  <div class="flex flex-col md:flex-row justify-between items-start gap-8">
+    <div class="flex-1 max-w-xl">
       <div class="flex gap-4 mb-4">
         <img
           class="rounded-full shadow-lg size-16"
@@ -34,9 +34,9 @@ import { Lanyard } from "@/components/Lanyard"
       <p
         class="mt-6 text-xl text-gray-800 dark:[&>strong]:text-yellow-200 [&>strong]:text-yellow-500 [&>strong]:font-semibold dark:text-gray-300"
       >
-        New Grad <strong
-          >Developer</strong
-        > from Illinois Institute of Technology. Specialized in <strong> Artificial Intelligence, Data Analytics and Software Engineering</strong>. Trying to contribute to the world by putting my grain of sand.
+        New Grad <strong>Developer</strong> from Illinois Institute of Technology. 
+        Specialized in <strong>Artificial Intelligence, Data Analytics and Software Engineering</strong>. 
+        Trying to contribute to the world by putting my grain of sand.
       </p>
       <nav class="flex flex-wrap gap-4 mt-8">
         <SocialPill href="mailto:clwuyang@gmail.com">
@@ -53,7 +53,7 @@ import { Lanyard } from "@/components/Lanyard"
         </SocialPill>
       </nav>
     </div>
-    <div class="flex-shrink-0">
+    <div class="w-full md:w-[600px] h-[500px] relative">
       <Lanyard client:load />
     </div>
   </div>
